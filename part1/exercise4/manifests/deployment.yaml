@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: server
+  name: project
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: server
+      app: project
   template:
     metadata:
       labels:
-        app: server
+        app: project
     spec:
       containers:
-        - name: server
-          image: server:latest
+        - name: project
+          image: project:latest
           imagePullPolicy: Never
