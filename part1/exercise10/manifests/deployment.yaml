@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output
+  template:
+    metadata:
+      labels:
+        app: log-output
+    spec:
+      volumes:
+        - name: shared-log-output
+          emptyDir: {}
+      containers:
+        - name: log-output-writer
+          image: log-output-writer:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: shared-log-output
+            mountPath: /usr/src/app/files
+        - name: log-output-reader
+          image: log-output-reader:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: shared-log-output
+            mountPath: /usr/src/app/files
