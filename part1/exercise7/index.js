@@ -13,7 +13,7 @@ const createString = () => {
     return output
 }
 
-app.get('/', (request, response) => {
+app.get('/logoutput', (request, response) => {
     response.send('<h1>' + new Date().toLocaleString() + ': ' + output + '</h1>')
 })
 

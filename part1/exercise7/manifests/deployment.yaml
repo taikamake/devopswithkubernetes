@@ -15,4 +15,4 @@ spec:
       containers:
         - name: log-output
           image: log-output:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
