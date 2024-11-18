@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output
+  template:
+    metadata:
+      labels:
+        app: log-output
+    spec:
+      volumes:
+        - name: log-output-pv
+          persistentVolumeClaim:
+            claimName: log-output-claim
+      containers:
+        - name: log-output
+          image: log-output:latest
+          volumeMounts:
+            - name: log-output-pv
+              mountPath: /usr/src/app/files
+          imagePullPolicy: IfNotPresent
