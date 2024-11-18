@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project
+  template:
+    metadata:
+      labels:
+        app: project
+    spec:
+      volumes:
+      - name: project-pv
+        persistentVolumeClaim:
+          claimName: project-claim
+      containers:
+        - name: project
+          image: project:latest
+          volumeMounts:
+            - name: project-pv
+              mountPath: /usr/src/app/files
+          imagePullPolicy: IfNotPresent
