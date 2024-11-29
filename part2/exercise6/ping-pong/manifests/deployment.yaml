@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: course
+  name: ping-pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-pong
+  template:
+    metadata:
+      labels:
+        app: ping-pong
+    spec:
+      volumes:
+      - name: log-output-pv
+        persistentVolumeClaim:
+          claimName: log-output-claim
+      - name: log-output-configmap
+        configMap:
+          name: log-output-configmap
+      containers:
+        - name: ping-pong
+          image: ping-pong:latest
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-configmap
+                  key: MESSAGE
+          volumeMounts:
+            - name: log-output-pv
+              mountPath: /usr/src/app/files
+            - name: log-output-configmap
+              mountPath: /usr/src/app/config
+          imagePullPolicy: IfNotPresent
