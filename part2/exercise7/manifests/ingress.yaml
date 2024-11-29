@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: course
+  name: log-output-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /logoutput
+        pathType: Prefix
+        backend:
+          service:
+            name: log-output
+            port:
+              number: 2345

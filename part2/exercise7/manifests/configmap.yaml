@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: course
+  name: log-output-configmap
+data:
+  MESSAGE: hello world
+  USER: postgres
+  HOST: postgres-svc
+  DB: postgres
+  DB_PORT: "5432"
+  config.txt: |
+    Hello from the configmap.
