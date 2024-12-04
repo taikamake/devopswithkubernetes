@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: todojob
+  namespace: project
+spec:
+  schedule: "56 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: todojob
+            image: todojob:latest
+            env:
+            - name: USER
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: USER
+            - name: DB
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: DB
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: DB_PORT
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: POSTGRES_PASSWORD
+            imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure
