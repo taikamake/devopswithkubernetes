@@ -13,13 +13,13 @@ spec:
         app: ping-pong
     spec:
       volumes:
-      - name: log-output-pv
+      - name: shared-pv
         persistentVolumeClaim:
-          claimName: log-output-claim
+          claimName: shared-claim
       containers:
         - name: ping-pong
           image: ping-pong:latest
           volumeMounts:
-            - name: log-output-pv
+            - name: shared-pv
               mountPath: /usr/src/app/files
           imagePullPolicy: IfNotPresent

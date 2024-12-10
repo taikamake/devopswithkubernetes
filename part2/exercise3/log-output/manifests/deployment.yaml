@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: course
   name: log-output
+  namespace: course
 spec:
   replicas: 1
   selector:
@@ -13,7 +13,20 @@ spec:
       labels:
         app: log-output
     spec:
+      volumes:
+        - name: log-output-pv
+          persistentVolumeClaim:
+            claimName: log-output-claim
       containers:
-        - name: log-output
-          image: log-output:latest
+        - name: log-output-reader
+          image: log-output-reader:latest
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: log-output-pv
+            mountPath: /usr/src/app/files
+        - name: log-output-writer
+          image: log-output-writer:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: log-output-pv
+            mountPath: /usr/src/app/files

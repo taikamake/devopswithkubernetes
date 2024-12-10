@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: course
   name: ping-pong
+  namespace: course
 spec:
   replicas: 1
   selector:
@@ -14,13 +14,13 @@ spec:
         app: ping-pong
     spec:
       volumes:
-      - name: log-output-pv
+      - name: ping-pong-pv
         persistentVolumeClaim:
-          claimName: log-output-claim
+          claimName: ping-pong-claim
       containers:
         - name: ping-pong
           image: ping-pong:latest
           volumeMounts:
-            - name: log-output-pv
+            - name: ping-pong-pv
               mountPath: /usr/src/app/files
           imagePullPolicy: IfNotPresent

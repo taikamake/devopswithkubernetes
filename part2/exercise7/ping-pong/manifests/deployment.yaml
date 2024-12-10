@@ -14,44 +14,36 @@ spec:
         app: ping-pong
     spec:
       volumes:
-      - name: log-output-configmap
+      - name: ping-pong-configmap
         configMap:
-          name: log-output-configmap
+          name: ping-pong-configmap
       containers:
         - name: ping-pong
           image: ping-pong:latest
           env:
-            - name: MESSAGE
-              valueFrom:
-                configMapKeyRef:
-                  name: log-output-configmap
-                  key: MESSAGE
             - name: USER
               valueFrom:
                 configMapKeyRef:
-                  name: log-output-configmap
+                  name: ping-pong-configmap
                   key: USER
             - name: DB
               valueFrom:
                 configMapKeyRef:
-                  name: log-output-configmap
+                  name: ping-pong-configmap
                   key: DB
             - name: HOST
               valueFrom:
                 configMapKeyRef:
-                  name: log-output-configmap
+                  name: ping-pong-configmap
                   key: HOST
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: log-output-configmap
+                  name: ping-pong-configmap
                   key: DB_PORT
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgres-password
                   key: POSTGRES_PASSWORD
-          volumeMounts:
-            - name: log-output-configmap
-              mountPath: /usr/src/app/config
           imagePullPolicy: IfNotPresent

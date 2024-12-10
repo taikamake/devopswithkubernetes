@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
+  name: ping-pong-svc
   namespace: course
-  name: ping-pong
   labels:
     app: ping-pong
 spec:

@@ -13,13 +13,19 @@ spec:
         app: log-output
     spec:
       volumes:
-        - name: log-output-pv
+        - name: shared-pv
           persistentVolumeClaim:
-            claimName: log-output-claim
+            claimName: shared-claim
       containers:
-        - name: log-output
-          image: log-output:latest
-          volumeMounts:
-            - name: log-output-pv
-              mountPath: /usr/src/app/files
+        - name: log-output-reader
+          image: log-output-reader:latest
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: shared-pv
+            mountPath: /usr/src/app/files
+        - name: log-output-writer
+          image: log-output-writer:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: shared-pv
+            mountPath: /usr/src/app/files

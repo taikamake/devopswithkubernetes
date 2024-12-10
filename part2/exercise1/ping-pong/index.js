@@ -1,11 +1,10 @@
 const express = require('express')
 const path = require('path')
 const fs = require('fs')
-const crypto = require('crypto')
 
 const app = express()
 const directory = path.join('/', 'usr', 'src', 'app', 'files')
-const filePath = path.join(directory, 'log.txt')
+const filePath = path.join(directory, 'pong.txt')
 
 const fileAlreadyExists = async () => new Promise(res => {
     fs.stat(filePath, (err, stats) => {
@@ -14,63 +13,37 @@ const fileAlreadyExists = async () => new Promise(res => {
     })
 })
 
-const removeFile = async () => new Promise(res => fs.unlink(filePath, (err) => res()))
-
 const createFile = async () => {
     if (await fileAlreadyExists()) return
     await new Promise(res => fs.mkdir(directory, { recursive: true }, (err) => res()))
     fs.createWriteStream(filePath, 'utf8')
-    const initialOutput = {
-        timestamp: 'NA',
-        hash: 'NA',
-        score: 0
-    }
-    const initialString = JSON.stringify(initialOutput)
-    console.log('INITIAL STRING: ' + initialString)
-    fs.writeFileSync(filePath, initialString, error => {
+    fs.writeFileSync(filePath, '0', error => {
         if (error) {
             console.log(error)
         }
     })
 }
 
-app.get('/pingpong', (request, response) => {
-    createFile()
-    fs.readFile(filePath, 'utf-8', (error, data) => {
+app.get('/pingpong', async (request, response) => {
+    await createFile()
+    await fs.readFile(filePath, 'utf-8', (error, data) => {
         if (error) {
             console.log(error)
             return
         }
-        console.log('HERE IS THE DATA')
-        console.log(data)
-        let dataObj = {}
-        try {
-            dataObj = JSON.parse(data)
-        }
-        catch(err) {
-            dataObj = {
-                timestamp: 'NA',
-                hash: 'NA',
-                score: 0
-            }
-        }
-        const score = dataObj.score + 1
-        const timestamp = new Date().toLocaleString()
-        const hash = crypto.createHash('sha256').update(timestamp).digest('hex')
-        const output = {
-            timestamp: timestamp,
-            hash: hash,
-            score: score
-        }
-        const newString = JSON.stringify(output)
-        fs.writeFileSync(filePath, newString, error => {
+        let score = parseInt(data)
+        if (!Number.isInteger(score)) {score = 0}
+        const count = score + 1
+        const output = count.toString()
+        fs.writeFileSync(filePath, output, error => {
             if (error) {
                 console.log(error)
             }
         })
-        response.send(dataObj)
+        response.send('pong ' + score)
     })
 })
+
 
 const PORT = 3001
 app.listen(PORT)

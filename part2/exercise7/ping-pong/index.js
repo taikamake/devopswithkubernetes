@@ -1,7 +1,4 @@
 const express = require('express')
-const path = require('path')
-const fs = require('fs')
-const crypto = require('crypto')
 const { Pool } = require('pg')
 
 const app = express()
@@ -13,28 +10,18 @@ const pool = new Pool({
 	database: process.env.DB,
 })
 
-const configDirectory = path.join('/', 'usr', 'src', 'app', 'config')
-const configFilePath = path.join(configDirectory, 'config.txt')
-
 app.get('/pingpong', async (request, response) => {
-    fs.readFile(configFilePath, 'utf-8', async (error, data) => {
-        if (error) return
+    try {
         const res = await pool.query('SELECT * FROM pingpong')
-        console.log('res: ' + res.rows[0].score + res.rows[0].id)
         const score = res.rows[0].score
         const newScore = score + 1
-        const timestamp = new Date().toLocaleString()
-        const hash = crypto.createHash('sha256').update(timestamp).digest('hex')
-        const output = {
-            timestamp: timestamp,
-            hash: hash,
-            score: score,
-            config: data,
-            env: process.env.MESSAGE
-        }
         await pool.query('UPDATE pingpong SET score = $1 WHERE id=1', [newScore])
-        response.send(output)
-    })
+        console.log('pong ' + score)
+        response.send('pong ' + score)
+    } catch (error) {
+        console.log('error: ' + error)
+        response.send('pong 0')
+    }
 })
 
 
