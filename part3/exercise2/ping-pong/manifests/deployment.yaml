@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: course
+  name: ping-pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-pong
+  template:
+    metadata:
+      labels:
+        app: ping-pong
+    spec:
+      volumes:
+      - name: ping-pong-configmap
+        configMap:
+          name: ping-pong-configmap
+      containers:
+        - name: ping-pong
+          image: gcr.io/integral-surfer-371007/ping-pong
+          env:
+            - name: USER
+              valueFrom:
+                configMapKeyRef:
+                  name: ping-pong-configmap
+                  key: USER
+            - name: DB
+              valueFrom:
+                configMapKeyRef:
+                  name: ping-pong-configmap
+                  key: DB
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ping-pong-configmap
+                  key: HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ping-pong-configmap
+                  key: DB_PORT
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: POSTGRES_PASSWORD
+          imagePullPolicy: IfNotPresent

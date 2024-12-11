@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-output
+  namespace: course
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-output
+  template:
+    metadata:
+      labels:
+        app: log-output
+    spec:
+      volumes:
+        - name: log-output-pv
+          persistentVolumeClaim:
+            claimName: log-output-claim
+        - name: log-output-configmap
+          configMap:
+            name: log-output-configmap
+      containers:
+        - name: log-output-reader
+          image: gcr.io/integral-surfer-371007/log-output-reader
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-configmap
+                  key: MESSAGE
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: log-output-pv
+            mountPath: /usr/src/app/files
+          - name: log-output-configmap
+            mountPath: /usr/src/app/config
+        - name: log-output-writer
+          image: gcr.io/integral-surfer-371007/log-output-writer
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+          - name: log-output-pv
+            mountPath: /usr/src/app/files
