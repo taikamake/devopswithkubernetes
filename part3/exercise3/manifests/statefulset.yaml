@@ -41,6 +41,8 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_INITDB_SKIP
               value: "true"
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
