@@ -64,3 +64,5 @@ jobs:
           kubectl rollout status deployment $APP_DEPLOYMENT
           kubectl rollout status deployment $BACKEND_DEPLOYMENT
           kubectl get services -o wide
+
+  
