@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-backend
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+    spec:
+      containers:
+        - name: todo-backend
+          image: BACKEND/IMAGE
+          env:
+            - name: USER
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: USER
+            - name: DB
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: DB
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: todo-configmap
+                  key: DB_PORT
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-password
+                  key: POSTGRES_PASSWORD
+          imagePullPolicy: IfNotPresent
