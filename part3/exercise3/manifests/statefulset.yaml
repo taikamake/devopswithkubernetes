@@ -48,8 +48,8 @@ spec:
     - metadata:
         name: data
       spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: standard
+        accessModes: ["ReadWriteMany"]
+        storageClassName: nfs-storage
         resources:
           requests:
             storage: 100Mi
