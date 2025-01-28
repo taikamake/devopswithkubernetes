@@ -47,7 +47,7 @@ spec:
         namespace: project
         name: data
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes: ["ReadWriteMany"]
         storageClassName: standard
         resources:
           requests:
