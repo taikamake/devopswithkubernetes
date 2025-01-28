@@ -26,10 +26,10 @@ jobs:
 
       - name: Set BRANCH
         run: |-
-          if [ "${{ GITHUB_REF }#refs/heads/}" = "main" ]; then
+          if [ "${{ GITHUB_REF }}"#refs/heads/ = "main" ]; then
             echo "BRANCH=default" >> $GITHUB_ENV
           else
-            echo "BRANCH=${{ GITHUB_REF }#refs/heads/}" >> $GITHUB_ENV
+            echo "BRANCH=${{ GITHUB_REF }}#refs/heads/" >> $GITHUB_ENV
 
       - uses: google-github-actions/auth@v2
         with:
