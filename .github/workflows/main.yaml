@@ -30,6 +30,7 @@ jobs:
             echo "BRANCH=default" >> $GITHUB_ENV
           else
             echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          fi
 
       - uses: google-github-actions/auth@v2
         with:
