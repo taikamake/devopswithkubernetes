@@ -19,6 +19,7 @@ metadata:
 spec:
   serviceName: postgres-svc
   replicas: 1
+  strategy: Recreate
   selector:
     matchLabels:
       app: postgres
