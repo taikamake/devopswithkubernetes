@@ -46,9 +46,10 @@ jobs:
 
       - name: Build and publish
         run: |-
-          docker build --tag "gcr.io/$PROJECT_ID/$APP_IMAGE:$BRANCH-$GITHUB_SHA" part3/exercise3/todo-app
+          cd part3/exercise3
+          docker build --tag "gcr.io/$PROJECT_ID/$APP_IMAGE:$BRANCH-$GITHUB_SHA" todo-app
           docker push "gcr.io/$PROJECT_ID/$APP_IMAGE:$BRANCH-$GITHUB_SHA"
-          docker build --tag "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA" part3/exercise3/todo-backend
+          docker build --tag "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA" todo-backend
           docker push "gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA"
 
       - name: Set up Kustomize
@@ -58,7 +59,7 @@ jobs:
         run: |-
           kustomize edit set image APP/IMAGE=gcr.io/$PROJECT_ID/$APP_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize edit set image BACKEND/IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
-          kustomize build part3/exercise3 | kubectl apply -f -
+          kustomize build . | kubectl apply -f -
           kubectl rollout status deployment $APP_DEPLOYMENT
           kubectl rollout status deployment $BACKEND_DEPLOYMENT
           kubectl get services -o wide
