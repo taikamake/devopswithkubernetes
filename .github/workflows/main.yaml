@@ -57,6 +57,7 @@ jobs:
 
       - name: Deploy
         run: |-
+          cd part3/exercise3
           kustomize edit set image APP/IMAGE=gcr.io/$PROJECT_ID/$APP_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize edit set image BACKEND/IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
