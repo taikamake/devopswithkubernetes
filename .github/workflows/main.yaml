@@ -4,7 +4,6 @@ on:
   push:
 
 env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-b
   APP_IMAGE: todo-app
@@ -22,6 +21,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set PROJECT_ID
+        run: echo "PROJECT_ID=${{ secrets.GKE_PROJECT }}" >> $GITHUB_ENV
 
       - uses: google-github-actions/auth@v2
         with:
