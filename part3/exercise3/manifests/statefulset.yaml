@@ -44,7 +44,6 @@ spec:
               mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
     - metadata:
-        namespace: project
         name: data
       spec:
         accessModes: ["ReadWriteMany"]
