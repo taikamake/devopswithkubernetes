@@ -21,7 +21,7 @@ jobs:
         run: echo "PROJECT_ID=${{ secrets.GKE_PROJECT }}" >> $GITHUB_ENV
 
       - name: Set BRANCH
-        run: echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+        run: echo "BRANCH=${{ github.event.ref }}" >> $GITHUB_ENV
 
       - uses: google-github-actions/auth@v2
         with:
