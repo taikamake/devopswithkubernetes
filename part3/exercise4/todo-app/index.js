@@ -32,11 +32,11 @@ const changeImage = async () => {
 }
 
 app.get('/', async (request, response) => {
-    axios
+    await axios
     .get('http://todo-backend:2345/todos')
     .then(res => {
-        const image = '<img src="/home/image" alt="random image" width="400"/>'
-        const form = '<form method="POST" action="/home/submit"><input type="text" name="todo" maxlength="140" /><input type="submit" value="Create TODO"></form>'
+        const image = '<img src="/image" alt="random image" width="400"/>'
+        const form = '<form method="POST" action="/submit"><input type="text" name="todo" maxlength="140" /><input type="submit" value="Create TODO"></form>'
         const todos = res.data
         const list = todos.map((todo) => '<li>' + todo + '</li>')
         const html = image + form + '<ul>' + list.join('') + '</ul>'
