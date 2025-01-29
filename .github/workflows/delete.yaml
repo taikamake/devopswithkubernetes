@@ -1,4 +1,4 @@
-name: Release application
+name: Delete namespace
 
 on:
   delete:
@@ -43,7 +43,4 @@ jobs:
           location: '${{ env.GKE_ZONE }}'
 
       - name: Delete
-        run: |-
-          if [ "${BRANCH}" != "main" ]; then
-            kubectl delete namespace $BRANCH --ignore-not-found=true
-          fi
+        run: kubectl delete namespace $BRANCH --ignore-not-found=true
