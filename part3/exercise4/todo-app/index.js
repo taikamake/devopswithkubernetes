@@ -31,7 +31,7 @@ const changeImage = async () => {
     await findAFile()
 }
 
-app.get('/', (request, response) => {
+app.get('/', async (request, response) => {
     axios
     .get('http://todo-backend:2345/todos')
     .then(res => {
@@ -44,7 +44,7 @@ app.get('/', (request, response) => {
     })
 })
 
-app.get('/image', (request, response) => {
+app.get('/image', async (request, response) => {
     findAFile()
     fs.readFile(filePath, (err, image) => {
         if (err) return
@@ -53,7 +53,7 @@ app.get('/image', (request, response) => {
     })
 })
 
-app.post('/submit', (request, response) => {
+app.post('/submit', async (request, response) => {
     const todo = JSON.stringify({text: request.body.todo})
     console.log(todo)
     axios.post('http://todo-backend:2345/todos', todo, {
