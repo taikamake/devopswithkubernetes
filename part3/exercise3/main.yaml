@@ -10,7 +10,6 @@ env:
   BACKEND_IMAGE: todo-backend
   APP_DEPLOYMENT: todo-app
   BACKEND_DEPLOYMENT: todo-backend
-  BRANCH: ${{ github.ref_name }}
 
 jobs:
   build-publish-deploy:
@@ -24,6 +23,14 @@ jobs:
 
       - name: Set PROJECT_ID
         run: echo "PROJECT_ID=${{ secrets.GKE_PROJECT }}" >> $GITHUB_ENV
+
+      - name: Set BRANCH
+        run: |-
+          if [ "${GITHUB_REF#refs/heads/}" = "main" ]; then
+            echo "BRANCH=default" >> $GITHUB_ENV
+          else
+            echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          fi
 
       - uses: google-github-actions/auth@v2
         with:
@@ -58,10 +65,16 @@ jobs:
       - name: Deploy
         run: |-
           cd part3/exercise3
+          kubectl create namespace $BRANCH || true
+          kubectl config set-context --current --namespace=$BRANCH
+          echo "${{ secrets.GKE_POSTGRE }}" > secret.yaml
+          kubectl apply -f secret.yaml
+          kustomize edit set namespace $BRANCH
           kustomize edit set image APP/IMAGE=gcr.io/$PROJECT_ID/$APP_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize edit set image BACKEND/IMAGE=gcr.io/$PROJECT_ID/$BACKEND_IMAGE:$BRANCH-$GITHUB_SHA
           kustomize build . | kubectl apply -f -
           kubectl rollout status deployment $APP_DEPLOYMENT
           kubectl rollout status deployment $BACKEND_DEPLOYMENT
           kubectl get services -o wide
+
           
