@@ -4,6 +4,8 @@ metadata:
   name: todo-app
   labels:
     app: todo-app
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
   type: ClusterIP
   selector:
