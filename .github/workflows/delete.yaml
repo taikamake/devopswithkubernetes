@@ -1,0 +1,49 @@
+name: Release application
+
+on:
+  delete:
+
+env:
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-b
+
+jobs:
+  delete-namespace:
+    name: Delete namespace
+    runs-on: ubuntu-latest
+    environment: project
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set PROJECT_ID
+        run: echo "PROJECT_ID=${{ secrets.GKE_PROJECT }}" >> $GITHUB_ENV
+
+      - name: Set BRANCH
+        run: echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GKE_SA_KEY }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: 'Use gcloud CLI'
+        run: gcloud info
+
+      - run: gcloud --quiet auth configure-docker
+
+      - name: 'Get GKE credentials'
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          cluster_name: '${{ env.GKE_CLUSTER }}'
+          project_id: '${{ env.PROJECT_ID }}'
+          location: '${{ env.GKE_ZONE }}'
+
+      - name: Delete
+        run: |-
+          if [ "${BRANCH}" != "main" ]; then
+            kubectl delete namespace $BRANCH --ignore-not-found=true
+          fi
